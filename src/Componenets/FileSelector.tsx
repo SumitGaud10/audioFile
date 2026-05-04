@@ -12,20 +12,7 @@ import NoAlbumCover from "./NoAlbumCover";
 import useTempAudio from "../Context/TempAudio/useTempAudio";
 import type { SongFormat } from "../Types/SongFormat";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "100%",
-  maxWidth: { xs: "100%", md: 600 },
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
-
-function StartEditingModal({
+function FileSelector({
   open,
   handleClose,
 }: {
@@ -52,7 +39,20 @@ function StartEditingModal({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "100%",
+          maxWidth: { xs: "100%", md: 600 },
+          bgcolor: "background.paper",
+          border: "2px solid #000",
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Upload File
         </Typography>
@@ -92,7 +92,7 @@ function StartEditingModal({
   );
 }
 
-export default StartEditingModal;
+export default FileSelector;
 
 const MusicStage = ({ audio }: { audio: SongFormat }) => {
   return (

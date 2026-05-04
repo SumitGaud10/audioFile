@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
 import type { SongFormat } from "../Types/SongFormat";
@@ -27,10 +26,9 @@ import { Tooltip } from "@mui/material";
 import CustomFIeld from "./CustomFIeld";
 
 function EditingForm({ audio }: { audio: SongFormat }) {
-  const { register, control, setValue, reset, handleSubmit } =
-    useForm<SongFormat>({
-      defaultValues: audio,
-    });
+  const { control, setValue, reset, handleSubmit } = useForm<SongFormat>({
+    defaultValues: audio,
+  });
 
   const { audioBuffer, fileExtension } = useTempAudio();
 

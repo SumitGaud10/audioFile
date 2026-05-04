@@ -7,7 +7,7 @@ import ColorLens from "@mui/icons-material/ColorLens";
 import FileCopyOutlined from "@mui/icons-material/FileCopyOutlined";
 import GitHub from "@mui/icons-material/GitHub";
 import Person from "@mui/icons-material/Person";
-import StartEditingModal from "../Componenets/StartEditingModal";
+import FileSelector from "../Componenets/FileSelector";
 import { useState } from "react";
 import useColorMode from "../Context/ColorMode/useColorMode";
 
@@ -40,7 +40,7 @@ function LandingPage() {
           }}
         >
           <Typography variant="subtitle1">Actions</Typography>
-          <StartEditingModalController />
+          <FileSelectorGroup />
           <Button startIcon={<GitHub />} sx={{ justifyContent: "start" }}>
             Explore Repository
           </Button>
@@ -62,23 +62,21 @@ function LandingPage() {
 
 export default LandingPage;
 
-function StartEditingModalController() {
+function FileSelectorGroup() {
   const [modal, setModal] = useState(false);
   const openModal = () => setModal(true);
   const closeModal = () => setModal(false);
-  const startEditing = () => {
-    openModal();
-  };
+
   return (
     <>
       <Button
         startIcon={<FileCopyOutlined />}
         sx={{ justifyContent: "start" }}
-        onClick={startEditing}
+        onClick={openModal}
       >
         Start
       </Button>
-      <StartEditingModal open={modal} handleClose={closeModal} />
+      <FileSelector open={modal} handleClose={closeModal} />
     </>
   );
 }
