@@ -1,13 +1,10 @@
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { MusicNote } from "@mui/icons-material";
-import React, { useState } from "react";
-import AutoFillModal from "./AutoFillModal";
+import MusicNote from "@mui/icons-material/MusicNote";
+import React from "react";
 
 const TopBar = React.memo(() => {
   return (

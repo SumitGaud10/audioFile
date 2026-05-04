@@ -1,22 +1,22 @@
-import { Close, Search, Warning } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  FormControl,
-  Grid,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Modal,
-  NativeSelect,
-  Select,
-  Skeleton,
-  TextField,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import React, { useState, type SubmitEventHandler } from "react";
+import Close from "@mui/icons-material/Close";
+import Search from "@mui/icons-material/Search";
+import Warning from "@mui/icons-material/Warning";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Modal from "@mui/material/Modal";
+import Select from "@mui/material/Select";
+import Skeleton from "@mui/material/Skeleton";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
+
+import React, { useState } from "react";
 import NoAlbumCover from "./NoAlbumCover";
 import type { SongFormat } from "../Types/SongFormat";
 import MusicInfoFetcher, {
@@ -106,13 +106,14 @@ const AutoFillModal = React.memo(function ({
         <Grid container rowSpacing={2} columnSpacing={2}>
           <Grid size={{ xs: 4, md: 2 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Age</InputLabel>
+              <InputLabel id="demo-simple-select-label">Source</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={source}
-                label="Age"
+                label="Source"
                 onChange={(e) => setSource(e.target.value)}
+                name="source"
               >
                 <MenuItem value={"ItunesHelper"}>iTunes</MenuItem>
                 <MenuItem value={"MusicBrainzHelper"}>MusicBrainz</MenuItem>

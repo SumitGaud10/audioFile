@@ -1,8 +1,13 @@
-import { AudioFile } from "@mui/icons-material";
-import { Box, Button, Modal, Typography } from "@mui/material";
+import AudioFile from "@mui/icons-material/AudioFile";
+
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+
 import VisuallyHiddenInput from "./VisuallyHiddenInput";
 import type { ChangeEventHandler } from "react";
-import { useAppState } from "../Context/AppState/useAppState";
+import useAppState from "../Context/AppState/useAppState";
 import NoAlbumCover from "./NoAlbumCover";
 import useTempAudio from "../Context/TempAudio/useTempAudio";
 import type { SongFormat } from "../Types/SongFormat";
@@ -36,7 +41,7 @@ function StartEditingModal({
   > = async (event) => {
     const file = event.target.files?.[0];
     if (!file) throw new Error("No file was uploaded");
-    changeAudio(await file.arrayBuffer());
+    changeAudio(file);
   };
 
   const proceed = () => changeState("Editing");
@@ -106,7 +111,7 @@ const MusicStage = ({ audio }: { audio: SongFormat }) => {
           sx={{ p: { xs: 5, sm: 0 }, width: { xs: "100%", sm: 100 } }}
         />
       ) : (
-        <NoAlbumCover />
+        <NoAlbumCover size={100} />
       )}
       <Box
         sx={{ px: 2, width: "100", textAlign: { xs: "center", sm: "start" } }}

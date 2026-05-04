@@ -1,14 +1,15 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
-import {
-  ColorLens,
-  FileCopyOutlined,
-  GitHub,
-  Person,
-} from "@mui/icons-material";
+import ColorLens from "@mui/icons-material/ColorLens";
+import FileCopyOutlined from "@mui/icons-material/FileCopyOutlined";
+import GitHub from "@mui/icons-material/GitHub";
+import Person from "@mui/icons-material/Person";
 import StartEditingModal from "../Componenets/StartEditingModal";
 import { useState } from "react";
-import { useColorMode } from "../Context/ColorMode/useColorMode";
+import useColorMode from "../Context/ColorMode/useColorMode";
 
 function LandingPage() {
   const { themeChanger, mode } = useColorMode();

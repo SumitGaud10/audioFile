@@ -8,6 +8,14 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 export default defineConfig([
   globalIgnores(['dist']),
   {
+    rules:{
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [{ "regex": "^@mui/[^/]+$" }]
+      }
+    ]
+  },
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,

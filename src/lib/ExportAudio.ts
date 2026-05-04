@@ -3,6 +3,7 @@ import { ID3Writer } from "browser-id3-writer";
 export const ExportAudio = async (
   data: SongFormat,
   audioBuffer: ArrayBuffer,
+  fileExtension: string | undefined,
 ) => {
   let imageArrayBuffer: ArrayBuffer | undefined;
 
@@ -54,7 +55,7 @@ export const ExportAudio = async (
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${data.title || "audio"}.mp3`;
+  a.download = `${data.title || "audio"}.${fileExtension || ".mp3"}`;
 
   document.body.appendChild(a);
   a.click();

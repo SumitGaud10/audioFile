@@ -1,49 +1,55 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Skeleton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+
 import type { SongFormat } from "../Types/SongFormat";
 import VisuallyHiddenInput from "./VisuallyHiddenInput";
 import {
   useForm,
+  useWatch,
   type SubmitHandler,
   type UseFormReset,
   type UseFormSetValue,
 } from "react-hook-form";
-import { Image, Save } from "@mui/icons-material";
+import Image from "@mui/icons-material/Image";
+import Save from "@mui/icons-material/Save";
 import NoAlbumCover from "./NoAlbumCover";
 import { useState } from "react";
 import imageToUrl from "../utils/imageToUrl";
 import AutoFillModal from "./AutoFillModal";
 import useTempAudio from "../Context/TempAudio/useTempAudio";
 import ExportAudio from "../lib/ExportAudio";
+import { Tooltip } from "@mui/material";
+import CustomFIeld from "./CustomFIeld";
 
 function EditingForm({ audio }: { audio: SongFormat }) {
-  const { register, watch, setValue, reset, handleSubmit } =
+  const { register, control, setValue, reset, handleSubmit } =
     useForm<SongFormat>({
       defaultValues: audio,
     });
 
-  const { audioBuffer } = useTempAudio();
+  const { audioBuffer, fileExtension } = useTempAudio();
 
   const onSubmit: SubmitHandler<SongFormat> = (data) => {
     if (!audioBuffer) {
       throw new Error("No audio found");
     }
-    ExportAudio(data, audioBuffer);
+    ExportAudio(data, audioBuffer, fileExtension);
   };
 
-  const imageUrl = watch("imageUrl");
+  const imageUrl = useWatch({
+    control,
+    name: "imageUrl",
+  });
 
   return (
     <Grid
       container
-      sx={{ marginTop: "3rem", px: 2 }}
+      sx={{ marginTop: "3rem", px: 2, Bottom: 10 }}
       rowSpacing={2}
       columnSpacing={4}
       component={"form"}
@@ -63,27 +69,38 @@ function EditingForm({ audio }: { audio: SongFormat }) {
       </Grid>
       <Grid size={{ xs: 12, md: 8 }} sx={{ marginTop: { xs: 3, md: 0 } }}>
         <Stack spacing={2} sx={{ width: "100%" }}>
-          <TextField
-            label="Title"
-            {...register("title", {
-              required: "Title is required",
-            })}
+          <CustomFIeld label="Title" name="title" control={control} />
+          <CustomFIeld label="Album" name="album" control={control} />
+          <CustomFIeld
+            label="Artist"
+            name="artist"
+            helperText="Seperate artists with ( ; )"
+            control={control}
           />
-          <TextField label="Album" {...register("album")} />
-          <TextField label="Artist" {...register("artist")} />
-          <TextField label="Date" {...register("date")} />
-          <TextField label="Genre" {...register("genre")} />
-          <TextField label="Track Number" {...register("track")} />
-          <TextField label="Album Artist" {...register("albumArtist")} />
+          <CustomFIeld label="Year" name="year" control={control} />
+          <CustomFIeld
+            label="Genre"
+            helperText="Seperate genre with ( ; )"
+            name="genre"
+            control={control}
+          />
+          <CustomFIeld label="Track Number" name="track" control={control} />
+          <CustomFIeld
+            label="Album Artist"
+            name="albumArtist"
+            control={control}
+          />
         </Stack>
       </Grid>
       <Grid
         size={12}
         sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}
       >
-        <Button variant="contained" startIcon={<Save />} type="submit">
-          Save
-        </Button>
+        <Tooltip title="Download new file with modified tags">
+          <Button variant="contained" startIcon={<Save />} type="submit">
+            Save
+          </Button>
+        </Tooltip>
       </Grid>
     </Grid>
   );
@@ -134,33 +151,32 @@ const ImageSection = function ({
 };
 
 const ContentImage = function ({ url }: { url?: string }) {
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
 
-  if (error) {
+  if (state == "error" || !url) {
     return <NoAlbumCover />;
   }
   return (
     <>
-      {loading && (
+      {state == "loading" && (
         <Skeleton
           variant="rectangular"
-          sx={{ aspectRatio: "1/1", width: "100%" }}
+          sx={{ width: "100%", height: "auto", aspectRatio: "1/1" }}
         />
       )}
       <Box
+        key={url}
         component={"img"}
         src={url}
         sx={{
           height: "auto",
           width: "100%",
-          display: loading ? "none" : "block",
+          display: state == "loading" ? "none" : "block",
         }}
         loading="eager"
-        onLoad={() => setLoading(false)}
+        onLoad={() => setState("ready")}
         onError={() => {
-          setLoading(false);
-          setError(true);
+          setState("error");
         }}
       />
     </>

@@ -1,5 +1,6 @@
-import { MusicNote } from "@mui/icons-material";
-import { Box, useTheme } from "@mui/material";
+import MusicNote from "@mui/icons-material/MusicNote";
+import Box from "@mui/material/Box";
+import { useTheme } from "@mui/material/styles";
 
 function NoAlbumCover({
   size,
