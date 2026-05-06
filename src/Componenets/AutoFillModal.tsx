@@ -19,9 +19,7 @@ import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
 import NoAlbumCover from "./NoAlbumCover";
 import type { SongFormat } from "../Types/SongFormat";
-import MusicInfoFetcher, {
-  type MusicInfoFetcherArgs,
-} from "../lib/MusicInfoFetcher";
+import tagsFetcher, { type tagsFetcherKey } from "../lib/tagsFetcher";
 import type { UseFormReset } from "react-hook-form";
 
 const style = {
@@ -41,6 +39,22 @@ const style = {
   flexDirection: "column",
 };
 
+type AutoFillModalState =
+  | {
+      state: "loading";
+    }
+  | {
+      state: "error";
+      message: string;
+    }
+  | {
+      state: "ready";
+      tracks: SongFormat[];
+    }
+  | {
+      state: "empty";
+    };
+
 const AutoFillModal = React.memo(function ({
   open,
   handleClose,
@@ -50,35 +64,37 @@ const AutoFillModal = React.memo(function ({
   handleClose: () => void;
   formResetFunction: UseFormReset<SongFormat>;
 }) {
-  const [result, setResult] = useState<SongFormat[]>();
-  const [error, setError] = useState<string | null>();
-  const [isLoading, setIsLoading] = useState<boolean>();
+  const [state, setState] = useState<AutoFillModalState>({ state: "empty" });
   const [value, setValue] = useState<string>("");
-  const [source, setSource] = useState<MusicInfoFetcherArgs>("ItunesHelper");
+  const [source, setSource] = useState<tagsFetcherKey>("ItunesHelper");
 
   const handleSubmit = async () => {
-    setError(null);
     if (!value) {
-      setError("Please enter something in order to search");
+      setState({
+        state: "error",
+        message: "Please enter something in order to search",
+      });
       return;
     }
 
     if (!source) {
-      setError("Please select a source");
+      setState({ state: "error", message: "Please select a source" });
       return;
     }
+
     try {
-      setIsLoading(true);
-      const result = await MusicInfoFetcher[source](value.toString());
-      setResult(result);
+      setState({ state: "loading" });
+      const result = await tagsFetcher[source](value.toString());
+      setState({ state: "ready", tracks: result });
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        setState({ state: "error", message: error.message });
       } else {
-        setError("There was an error while making request");
+        setState({
+          state: "error",
+          message: "There was an error while making request",
+        });
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -142,11 +158,11 @@ const AutoFillModal = React.memo(function ({
           </Grid>
         </Grid>
         <Box sx={{ flex: "1", minHeight: 0, overflow: "hidden" }}>
-          {isLoading && <Loading />}
-          {error && <ErrorContent error={error} />}
-          {result && !isLoading && !error && (
+          {state.state == "loading" && <Loading />}
+          {state.state == "error" && <ErrorContent error={state.message} />}
+          {state.state == "ready" && (
             <ContentArea
-              data={result}
+              tracks={state.tracks}
               handleClose={handleClose}
               formResetFunction={formResetFunction}
             />
@@ -193,18 +209,18 @@ function ErrorContent({ error }: { error: string }) {
 }
 
 const ContentArea = React.memo(function ({
-  data,
+  tracks,
   handleClose,
   formResetFunction,
 }: {
-  data: SongFormat[];
+  tracks: SongFormat[];
   handleClose: () => void;
   formResetFunction: UseFormReset<SongFormat>;
 }) {
   const theme = useTheme();
 
-  const updateAudio = (data: SongFormat) => {
-    formResetFunction(data);
+  const updateAudio = (track: SongFormat) => {
+    formResetFunction(track);
     handleClose();
   };
 
@@ -218,9 +234,9 @@ const ContentArea = React.memo(function ({
         height: "100%",
       }}
     >
-      {data.map((value) => (
+      {tracks.map((track) => (
         <Grid
-          key={value.id}
+          key={track.id}
           size={{ xs: 12, md: 4 }}
           sx={{
             display: "flex",
@@ -232,9 +248,9 @@ const ContentArea = React.memo(function ({
             padding: 1,
           }}
           component={"a"}
-          onClick={() => updateAudio(value)}
+          onClick={() => updateAudio(track)}
         >
-          <ContentImage url={value.previewImageUrl} />
+          <ContentImage url={track.previewImageUrl} />
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography
               sx={{
@@ -244,7 +260,7 @@ const ContentArea = React.memo(function ({
                 width: "100%",
               }}
             >
-              {value.title}
+              {track.title}
             </Typography>
             <Typography
               color="textSecondary"
@@ -256,7 +272,7 @@ const ContentArea = React.memo(function ({
                 width: "100%",
               }}
             >
-              {value.artist}
+              {track.artist}
             </Typography>
           </Box>
         </Grid>
@@ -266,26 +282,28 @@ const ContentArea = React.memo(function ({
 });
 
 const ContentImage = React.memo(function ({ url }: { url?: string }) {
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState<"loading" | "error" | "ready">("loading");
 
-  if (error) {
+  if (state == "error") {
     return <NoAlbumCover size={40} varient="medium" />;
   }
   return (
     <>
-      {loading && (
+      {state == "loading" && (
         <Skeleton variant="rectangular" sx={{ height: 40, width: 40 }} />
       )}
       <Box
         component={"img"}
         src={url}
-        sx={{ height: 40, width: 40, display: loading ? "none" : "block" }}
+        sx={{
+          height: 40,
+          width: 40,
+          display: state == "loading" ? "none" : "block",
+        }}
         loading="eager"
-        onLoad={() => setLoading(false)}
+        onLoad={() => setState("ready")}
         onError={() => {
-          setLoading(false);
-          setError(true);
+          setState("error");
         }}
       />
     </>

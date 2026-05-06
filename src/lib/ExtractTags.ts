@@ -1,11 +1,12 @@
 import type { SongFormat } from "../Types/SongFormat";
 
-const ExtractInfo = async (audio: ArrayBuffer): Promise<SongFormat> => {
+const ExtractTags = async (audio: ArrayBuffer): Promise<SongFormat> => {
   const { parseBlob } = await import("music-metadata");
   const blob = new Blob([audio]);
   const reader = await parseBlob(blob);
 
   const tags = reader.common;
+  console.log(tags);
 
   let imageUrl: undefined | string = undefined;
 
@@ -19,9 +20,9 @@ const ExtractInfo = async (audio: ArrayBuffer): Promise<SongFormat> => {
 
   const result: SongFormat = {
     title: tags.title || "",
-    artist: tags.artist || "",
+    artist: tags.artists?.join("; ") || "",
     album: tags.album || undefined,
-    albumArtist: tags.albumartist || undefined,
+    albumArtist: tags.albumartists?.join("; ") || undefined,
     track: tags.track.no || undefined,
 
     date: tags.date || undefined,
@@ -35,4 +36,4 @@ const ExtractInfo = async (audio: ArrayBuffer): Promise<SongFormat> => {
   return result;
 };
 
-export default ExtractInfo;
+export default ExtractTags;

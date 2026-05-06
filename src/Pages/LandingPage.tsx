@@ -11,6 +11,9 @@ import FileSelector from "../Componenets/FileSelector";
 import { useState } from "react";
 import useColorMode from "../Context/ColorMode/useColorMode";
 
+const githubRepo = "https://github.com/SumitGaud10/audioFile";
+const githubAccount = "https://github.com/SumitGaud10";
+
 function LandingPage() {
   const { themeChanger, mode } = useColorMode();
 
@@ -41,10 +44,18 @@ function LandingPage() {
         >
           <Typography variant="subtitle1">Actions</Typography>
           <FileSelectorGroup />
-          <Button startIcon={<GitHub />} sx={{ justifyContent: "start" }}>
+          <Button
+            startIcon={<GitHub />}
+            sx={{ justifyContent: "start" }}
+            onClick={() => window.open(githubRepo, "_blank")?.focus()}
+          >
             Explore Repository
           </Button>
-          <Button startIcon={<Person />} sx={{ justifyContent: "start" }}>
+          <Button
+            startIcon={<Person />}
+            sx={{ justifyContent: "start" }}
+            onClick={() => window.open(githubAccount, "_blank")?.focus()}
+          >
             About Developer
           </Button>
           <Button

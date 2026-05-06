@@ -17,7 +17,7 @@ export const ExportAudio = async (
 
   // 🎵 Basic tags
   if (data.title) writer.setFrame("TIT2", data.title);
-  if (data.artist) writer.setFrame("TPE1", data.artist.split("; "));
+  if (data.artist) writer.setFrame("TPE1", data.artist.split(";"));
   if (data.album) writer.setFrame("TALB", data.album);
   if (data.albumArtist) writer.setFrame("TPE2", data.albumArtist);
   if (data.genre) writer.setFrame("TCON", [data.genre]);

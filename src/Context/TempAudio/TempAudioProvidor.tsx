@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import TempAudioContext from "./TempAudioContext";
 import type { SongFormat } from "../../Types/SongFormat";
-import ExtractInfo from "../../lib/MusicDataExtractor";
+import ExtractTags from "../../lib/ExtractTags";
 
 function TempAudioProvidor({ children }: { children: ReactNode }) {
   const [audio, setAudio] = useState<undefined | SongFormat>(undefined);
@@ -14,7 +14,7 @@ function TempAudioProvidor({ children }: { children: ReactNode }) {
     if (audio?.imageUrl && audio.imageUrl.startsWith("blob")) {
       URL.revokeObjectURL(audio.imageUrl);
     }
-    const data = await ExtractInfo(newAudioBuffer);
+    const data = await ExtractTags(newAudioBuffer);
     setAudio(data);
     setAudioBuffer(newAudioBuffer);
   };

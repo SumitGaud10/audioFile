@@ -22,7 +22,7 @@ import imageToUrl from "../utils/imageToUrl";
 import AutoFillModal from "./AutoFillModal";
 import useTempAudio from "../Context/TempAudio/useTempAudio";
 import ExportAudio from "../lib/ExportAudio";
-import { Tooltip } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import CustomFIeld from "./CustomFIeld";
 
 function EditingForm({ audio }: { audio: SongFormat }) {
@@ -47,7 +47,7 @@ function EditingForm({ audio }: { audio: SongFormat }) {
   return (
     <Grid
       container
-      sx={{ marginTop: "3rem", px: 2, Bottom: 10 }}
+      sx={{ marginTop: "3rem", px: 2, marginBottom: 10 }}
       rowSpacing={2}
       columnSpacing={4}
       component={"form"}
